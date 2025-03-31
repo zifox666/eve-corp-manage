@@ -2,6 +2,7 @@ package models
 
 import (
 	_ "gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 // int类型代表是否的常量
@@ -22,3 +23,5 @@ func calcPage(pageSize, limitSize int) (offset, limit int) {
 	limit = limitSize
 	return
 }
+
+var Db *gorm.DB

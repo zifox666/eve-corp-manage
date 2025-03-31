@@ -2,6 +2,7 @@ package database
 
 import (
 	"eve-corp-manager/config"
+	system2 "eve-corp-manager/core/system"
 	"eve-corp-manager/models/service"
 	"eve-corp-manager/models/system"
 	"log"
@@ -21,7 +22,10 @@ type DbClient interface {
 }
 
 type MySQLConfig struct {
-	Dsn string
+	Dsn          string
+	MaxIdleConns int
+	MaxOpenConns int
+	WaitTimeout  int
 }
 
 func DbInit(dbClient DbClient) (db *gorm.DB, dbErr error) {
@@ -64,7 +68,7 @@ func GetLogger() logger.Interface {
 }
 
 // 创建数据库
-func CreateDatabase(driver string, db *gorm.DB) error {
+func CreateDatabase(db *gorm.DB) error {
 
 	db = db.Set("gorm:table_options", "ENGINE=InnoDB")
 
@@ -72,7 +76,7 @@ func CreateDatabase(driver string, db *gorm.DB) error {
 		&system.User{},
 		&system.Role{},
 		&system.RoleMenu{},
-		&system.SystemSetting{},
+		&system2.SysSettings{},
 
 		&service.Fleet{},
 		&service.CharacterFleetAssociation{},

@@ -5,7 +5,7 @@ go 1.24
 require (
 	github.com/fatih/color v1.18.0
 	github.com/gin-gonic/gin v1.10.0
-	github.com/go-redis/redis/v8 v8.11.5
+	github.com/redis/go-redis/v9 v9.7.3
 	github.com/spf13/viper v1.20.1
 	go.uber.org/zap v1.27.0
 	gorm.io/driver/mysql v1.5.7
