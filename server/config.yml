@@ -1,0 +1,14 @@
+app:
+  Env: debug
+  port: 5005
+
+database:
+  dsn: root:123456@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local
+  MaxIdleConns: 100
+  MaxOpenCons: 1000
+  WaitTimeout: 60
+
+redis:
+  addr: localhost:6379
+  DB: 0
+  Password: ""
