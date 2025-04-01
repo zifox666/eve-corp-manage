@@ -29,6 +29,10 @@ type Config struct {
 	SdeSqlite struct {
 		Path string
 	}
+	Proxy struct {
+		Host string
+		Port string
+	}
 }
 
 var AppConfig *Config

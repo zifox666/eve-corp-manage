@@ -4,6 +4,7 @@ import (
 	"eve-corp-manager/config"
 	"eve-corp-manager/global"
 	"eve-corp-manager/initialize/database"
+	"eve-corp-manager/initialize/esi"
 	"eve-corp-manager/initialize/redis"
 	"eve-corp-manager/initialize/run_log"
 	"eve-corp-manager/initialize/sde"
@@ -44,6 +45,9 @@ func StartUp() {
 
 	// 加载系统缓存
 	system.InitSettings()
+
+	// 启动HTTP Client
+	esi.InitESIClient()
 
 }
 

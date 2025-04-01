@@ -1,6 +1,7 @@
 package global
 
 import (
+	"eve-corp-manager/core/esi"
 	"eve-corp-manager/core/system"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
