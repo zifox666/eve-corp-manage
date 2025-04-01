@@ -11,6 +11,7 @@ import (
 
 // SystemSetting 系统设置模型
 type SystemSetting struct {
+	gorm.Model
 	ID          uint   `gorm:"primarykey"`
 	ConfigName  string `gorm:"size:100;not null;uniqueIndex"`
 	ConfigValue string `gorm:"type:text"`

@@ -76,7 +76,7 @@ func CreateDatabase(db *gorm.DB) error {
 		&system.User{},
 		&system.Role{},
 		&system.RoleMenu{},
-		&system2.SysSettings{},
+		&system2.SystemSetting{},
 
 		&service.Fleet{},
 		&service.CharacterFleetAssociation{},

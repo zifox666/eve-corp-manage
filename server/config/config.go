@@ -26,12 +26,17 @@ type Config struct {
 	SourceDir struct {
 		Base string
 	}
+	SdeSqlite struct {
+		Path string
+	}
 }
 
 var AppConfig *Config
 
 var (
 	RootDir string
+	LogsDir string
+	DataDir string
 )
 
 func InitRootDir() {
@@ -39,7 +44,9 @@ func InitRootDir() {
 	if err != nil {
 		log.Fatalf("Error getting current working directory: %v", err)
 	}
-	RootDir = filepath.Dir(rootDir) + "/server"
+	RootDir = filepath.Dir(rootDir)
+	DataDir = filepath.Join(RootDir, "data")
+	LogsDir = filepath.Join(DataDir, "logs")
 }
 
 func InitConfig() {
@@ -47,7 +54,7 @@ func InitConfig() {
 
 	viper.SetConfigName("config")
 	viper.SetConfigType("yml")
-	viper.AddConfigPath(RootDir)
+	viper.AddConfigPath(filepath.Join(RootDir, "server"))
 
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("Error reading config file: %v", err)

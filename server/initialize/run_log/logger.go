@@ -11,7 +11,7 @@ import (
 
 func InitLog(runmode string, filePath string) (*zap.SugaredLogger, error) {
 
-	runtimePath := config.RootDir + "/logs"
+	runtimePath := config.LogsDir
 	if err := os.MkdirAll(runtimePath, 0777); err != nil {
 		return nil, err
 	}
