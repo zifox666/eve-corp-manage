@@ -12,5 +12,19 @@ func InitESIClient() {
 
 	userAgent := "EveCorpManage/1.0.0 (zifox666@gmail.com; +https://github.com/zifox666/eve-corp-manage)"
 
-	esi.Client = esi.NewESIClient(proxyHost, proxyPort, userAgent)
+	apiType := "esi"
+
+	esi.EsiClient = esi.NewClient(proxyHost, proxyPort, userAgent, apiType)
+}
+
+// InitJaniceClient 初始化Janice HTTP客户端
+func InitJaniceClient() {
+	proxyHost := config.AppConfig.Proxy.Host
+	proxyPort := config.AppConfig.Proxy.Port
+
+	userAgent := "EveCorpManage/1.0.0 (zifox666@gmail.com; +https://github.com/zifox666/eve-corp-manage)"
+
+	apiType := "janice"
+
+	esi.JaniceClient = esi.NewClient(proxyHost, proxyPort, userAgent, apiType)
 }

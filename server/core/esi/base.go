@@ -13,27 +13,33 @@ import (
 )
 
 const (
-	baseESIURL = "https://esi.evetech.net/latest"
+	baseESIURL    = "https://esi.evetech.net/latest"
+	baseJaniceURL = "https://janice.e-351.com/api/rest/v2"
+
+	typeEsi    = "esi"
+	typeJanice = "janice"
 )
 
-// ESIClient 表示与EVE ESI API通信的HTTP客户端
-type ESIClient struct {
+// Client HTTP客户端
+type Client struct {
 	client    *http.Client
 	userAgent string
 	baseURL   string
 }
 
-// Client 全局ESI客户端实例
-var Client *ESIClient
+// EsiClient 全局客户端实例
+var (
+	EsiClient    *Client
+	JaniceClient *Client
+)
 
-// NewESIClient 创建一个新的ESI客户端
-func NewESIClient(proxyHost, proxyPort, userAgent string) *ESIClient {
+// NewClient 创建一个新的ESI客户端
+func NewClient(proxyHost, proxyPort, userAgent, apiType string) *Client {
 	transport := &http.Transport{
 		MaxIdleConns:    2000,
 		IdleConnTimeout: 90 * time.Second,
 	}
 
-	// 设置代理
 	if proxyHost != "" && proxyPort != "" {
 		proxyURL, err := url.Parse(fmt.Sprintf("http://%s:%s", proxyHost, proxyPort))
 		if err == nil {
@@ -46,15 +52,23 @@ func NewESIClient(proxyHost, proxyPort, userAgent string) *ESIClient {
 		Timeout:   time.Second * 30,
 	}
 
-	return &ESIClient{
+	var baseURL string
+	switch apiType {
+	case typeEsi:
+		baseURL = baseESIURL
+	case typeJanice:
+		baseURL = baseJaniceURL
+	}
+
+	return &Client{
 		client:    client,
 		userAgent: userAgent,
-		baseURL:   baseESIURL,
+		baseURL:   baseURL,
 	}
 }
 
 // Get 发送GET请求到ESI API
-func (c *ESIClient) Get(path string, query url.Values) (*http.Response, error) {
+func (c *Client) Get(path string, query url.Values) (*http.Response, error) {
 	reqURL := c.baseURL + path
 	if query != nil {
 		reqURL += "?" + query.Encode()
@@ -72,7 +86,7 @@ func (c *ESIClient) Get(path string, query url.Values) (*http.Response, error) {
 }
 
 // Post 发送POST请求到ESI API
-func (c *ESIClient) Post(path string, contentType string, body []byte) (*http.Response, error) {
+func (c *Client) Post(path string, contentType string, body []byte) (*http.Response, error) {
 	reqURL := c.baseURL + path
 	req, err := http.NewRequest("POST", reqURL, bytes.NewBuffer(body))
 	if err != nil {
@@ -87,7 +101,7 @@ func (c *ESIClient) Post(path string, contentType string, body []byte) (*http.Re
 }
 
 // GetJSON 发送GET请求并将结果解析为JSON
-func (c *ESIClient) GetJSON(path string, query url.Values, result interface{}) error {
+func (c *Client) GetJSON(path string, query url.Values, result interface{}) error {
 	resp, err := c.Get(path, query)
 	if err != nil {
 		return err
@@ -103,7 +117,7 @@ func (c *ESIClient) GetJSON(path string, query url.Values, result interface{}) e
 }
 
 // AuthorizedGet 发送带授权的GET请求
-func (c *ESIClient) AuthorizedGet(path string, query url.Values, token string) (*http.Response, error) {
+func (c *Client) AuthorizedGet(path string, query url.Values, token string) (*http.Response, error) {
 	reqURL := c.baseURL + path
 	if query != nil {
 		reqURL += "?" + query.Encode()
@@ -122,7 +136,7 @@ func (c *ESIClient) AuthorizedGet(path string, query url.Values, token string) (
 }
 
 // AuthorizedGetJSON 发送带授权的GET请求并解析JSON
-func (c *ESIClient) AuthorizedGetJSON(path string, query url.Values, token string, result interface{}) error {
+func (c *Client) AuthorizedGetJSON(path string, query url.Values, token string, result interface{}) error {
 	resp, err := c.AuthorizedGet(path, query, token)
 	if err != nil {
 		return err
@@ -138,7 +152,7 @@ func (c *ESIClient) AuthorizedGetJSON(path string, query url.Values, token strin
 }
 
 // GetAllPages 并发获取所有分页数据
-func (c *ESIClient) GetAllPages(path string, query url.Values, resultContainer interface{}) error {
+func (c *Client) GetAllPages(path string, query url.Values, resultContainer interface{}) error {
 	// 首先获取第一页来确定总页数
 	resp, err := c.Get(path, query)
 	if err != nil {
@@ -233,7 +247,7 @@ func (c *ESIClient) GetAllPages(path string, query url.Values, resultContainer i
 }
 
 // AuthorizedGetAllPages 带授权的并发获取所有分页数据
-func (c *ESIClient) AuthorizedGetAllPages(path string, query url.Values, token string, resultContainer interface{}) error {
+func (c *Client) AuthorizedGetAllPages(path string, query url.Values, token string, resultContainer interface{}) error {
 	// 首先获取第一页来确定总页数
 	resp, err := c.AuthorizedGet(path, query, token)
 	if err != nil {

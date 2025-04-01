@@ -11,7 +11,7 @@ func getServerStatus() (map[string]interface{}, error) {
 	query := url.Values{}
 	query.Set("datasource", "tranquility")
 
-	err := Client.GetJSON("/status/", query, &result)
+	err := EsiClient.GetJSON("/status/", query, &result)
 	if err != nil {
 		return nil, err
 	}

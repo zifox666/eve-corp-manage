@@ -5,6 +5,7 @@ import (
 	"eve-corp-manager/global"
 	"eve-corp-manager/initialize/database"
 	"eve-corp-manager/initialize/esi"
+	"eve-corp-manager/initialize/qq"
 	"eve-corp-manager/initialize/redis"
 	"eve-corp-manager/initialize/run_log"
 	"eve-corp-manager/initialize/sde"
@@ -48,6 +49,10 @@ func StartUp() {
 
 	// 启动HTTP Client
 	esi.InitESIClient()
+	esi.InitJaniceClient()
+
+	// 启动QQ通知服务
+	qq.InitQQClient()
 
 }
 

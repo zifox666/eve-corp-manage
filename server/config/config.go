@@ -33,6 +33,9 @@ type Config struct {
 		Host string
 		Port string
 	}
+	QQ struct {
+		OnebotUrl string
+	}
 }
 
 var AppConfig *Config
