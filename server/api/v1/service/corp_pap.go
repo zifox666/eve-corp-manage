@@ -2,7 +2,7 @@ package service
 
 import (
 	"eve-corp-manager/global"
-	"eve-corp-manager/models/service"
+	"eve-corp-manager/models/service/pap"
 	"net/http"
 	"time"
 
@@ -30,10 +30,10 @@ func GetUserPapList(c *gin.Context) {
 		req.Limit = 10
 	}
 
-	var papRecords []service.CorpPap
+	var papRecords []pap.CorpPap
 	var total int64
 
-	db := global.Db.Model(&service.CorpPap{})
+	db := global.Db.Model(&pap.CorpPap{})
 	if req.UserID > 0 {
 		db = db.Where("user_id = ?", req.UserID)
 	}
@@ -74,7 +74,7 @@ func GetUserPapBalance(c *gin.Context) {
 	}
 
 	// 获取最新的PAP记录以获取余额
-	var latestPap service.CorpPap
+	var latestPap pap.CorpPap
 	result := global.Db.Where("user_id = ?", req.UserID).Order("created_at DESC").First(&latestPap)
 
 	balance := 0
@@ -116,7 +116,7 @@ func AddUserPap(c *gin.Context) {
 
 	// 获取当前余额
 	var currentBalance int
-	var latestPap service.CorpPap
+	var latestPap pap.CorpPap
 	result := global.Db.Where("user_id = ?", req.UserID).Order("created_at DESC").First(&latestPap)
 	if result.Error == nil {
 		currentBalance = latestPap.Balance
@@ -133,7 +133,7 @@ func AddUserPap(c *gin.Context) {
 	tx := global.Db.Begin()
 
 	// 创建PAP记录
-	papRecord := service.CorpPap{
+	papRecord := pap.CorpPap{
 		UserID:     req.UserID,
 		Amount:     req.Amount,
 		Balance:    newBalance,
@@ -152,7 +152,7 @@ func AddUserPap(c *gin.Context) {
 	}
 
 	// 创建操作日志
-	papLog := service.CorpPapLog{
+	papLog := pap.CorpPapLog{
 		UserID:     req.UserID,
 		Operation:  "增加PAP",
 		Amount:     req.Amount,
@@ -209,7 +209,7 @@ func ConsumeUserPap(c *gin.Context) {
 
 	// 获取当前余额
 	var currentBalance int
-	var latestPap service.CorpPap
+	var latestPap pap.CorpPap
 	result := global.Db.Where("user_id = ?", req.UserID).Order("created_at DESC").First(&latestPap)
 	if result.Error == nil {
 		currentBalance = latestPap.Balance
@@ -235,7 +235,7 @@ func ConsumeUserPap(c *gin.Context) {
 	tx := global.Db.Begin()
 
 	// 创建PAP记录
-	papRecord := service.CorpPap{
+	papRecord := pap.CorpPap{
 		UserID:     req.UserID,
 		Amount:     -req.Amount, // 负数表示消费
 		Balance:    newBalance,
@@ -254,7 +254,7 @@ func ConsumeUserPap(c *gin.Context) {
 	}
 
 	// 创建操作日志
-	papLog := service.CorpPapLog{
+	papLog := pap.CorpPapLog{
 		UserID:     req.UserID,
 		Operation:  "消费PAP",
 		Amount:     req.Amount,
@@ -308,10 +308,10 @@ func GetPapLogs(c *gin.Context) {
 		req.Limit = 10
 	}
 
-	var papLogs []service.CorpPapLog
+	var papLogs []pap.CorpPapLog
 	var total int64
 
-	db := global.Db.Model(&service.CorpPapLog{})
+	db := global.Db.Model(&pap.CorpPapLog{})
 	if req.UserID > 0 {
 		db = db.Where("user_id = ?", req.UserID)
 	}

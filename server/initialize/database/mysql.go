@@ -3,7 +3,7 @@ package database
 import (
 	"eve-corp-manager/config"
 	system2 "eve-corp-manager/core/system"
-	"eve-corp-manager/models/service"
+	"eve-corp-manager/models/service/fleet"
 	"eve-corp-manager/models/system"
 	"log"
 	"os"
@@ -78,8 +78,8 @@ func CreateDatabase(db *gorm.DB) error {
 		&system.RoleMenu{},
 		&system2.SystemSetting{},
 
-		&service.Fleet{},
-		&service.CharacterFleetAssociation{},
+		&fleet.Fleet{},
+		&fleet.CharacterFleetAssociation{},
 	)
 
 	// 创建数据表

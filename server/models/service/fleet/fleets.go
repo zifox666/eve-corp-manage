@@ -1,4 +1,4 @@
-package service
+package fleet
 
 import (
 	"eve-corp-manager/models/common"

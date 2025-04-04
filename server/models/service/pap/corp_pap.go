@@ -1,4 +1,4 @@
-package service
+package pap
 
 import (
 	"eve-corp-manager/models/common"
